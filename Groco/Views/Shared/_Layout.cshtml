@@ -17,12 +17,12 @@
         <a href="#" class="logo"><i class="fas fa-shopping-basket"></i>groco</a>
 
         <nav class="navbar">
-            <a href="#home">home</a>
-            <a href="#features">features</a>
-            <a href="#products">products</a>
-            <a href="#categories">categories</a>
-            <a href="#review">review</a>
-            <a href="#blogs">blogs</a>
+            <a asp-controller="Home" asp-action="Index">home</a>
+            <a asp-controller="Product" asp-action="Features">features</a>
+            <a asp-controller="Product" asp-action="Products">products</a>
+            <a asp-controller="Product" asp-action="Categories">categories</a>
+            <a asp-controller="Home" asp-action="Review">review</a>
+            <a asp-controller="Home" asp-action="Blogs">blogs</a>
         </nav>
         <div class="icons">
             <div class="fas fa-bars" id="menu-btn"></div>
@@ -101,12 +101,12 @@
             </div>
             <div class="box">
                 <h3>Quick Links</h3>
-                <a href="#" class="links"><i class="fas fa-arrow-right"></i>Home</a>
-                <a href="#" class="links"><i class="fas fa-arrow-right"></i>Features</a>
-                <a href="#" class="links"><i class="fas fa-arrow-right"></i>Products</a>
-                <a href="#" class="links"><i class="fas fa-arrow-right"></i>Categories</a>
-                <a href="#" class="links"><i class="fas fa-arrow-right"></i>Review</a>
-                <a href="#" class="links"><i class="fas fa-arrow-right"></i>Blogs</a>
+                <a asp-controller="Home" asp-action="Index" class="links"><i class="fas fa-arrow-right"></i>Home</a>
+                <a asp-controller="Product" asp-action="Features" class="links"><i class="fas fa-arrow-right"></i>Features</a>
+                <a asp-controller="Product" asp-action="Products" class="links"><i class="fas fa-arrow-right"></i>Products</a>
+                <a asp-controller="Product" asp-action="Categories" class="links"><i class="fas fa-arrow-right"></i>Categories</a>
+                <a asp-controller="Home" asp-action="Review" class="links"><i class="fas fa-arrow-right"></i>Review</a>
+                <a asp-controller="Home" asp-action="Blogs" class="links"><i class="fas fa-arrow-right"></i>Blogs</a>
             </div>
             <div class="box">
                 <h3>Newsletter</h3>
