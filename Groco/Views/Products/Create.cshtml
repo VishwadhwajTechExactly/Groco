@@ -1,0 +1,27 @@
+﻿@model Product
+
+<h1 class="text-center" style="margin:100px">Create Product</h1>
+
+<form method="post" enctype="multipart/form-data">
+	<div style="margin:20px">
+		<label asp-for="Name"></label>
+		<input type="text" asp-for="Name"/>
+		<span asp-validation-for="Name"></span>
+	</div>
+	<div style="margin:20px">
+		<label asp-for="Price"></label>
+		<input type="text" asp-for="Price" />
+		<span asp-validation-for="Price"></span>
+	</div>
+	<div style="margin:20px">
+		<label asp-for="Rating"></label>
+		<input type="text" asp-for="Rating" />
+		<span asp-validation-for="Rating"></span>
+	</div>
+	<div style="margin:20px">
+		<input type="file" asp-for="ImageUrl" />
+	</div>
+	<div style="margin:20px">
+		<button type="submit"  class="btn btn-primary">Create</button>
+	</div>
+</form>

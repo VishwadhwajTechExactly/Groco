@@ -17,5 +17,10 @@ namespace Groco.Controllers
             List<Product> products=_context.Products.ToList();
             return View(products);
         }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }
