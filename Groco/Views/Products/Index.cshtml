@@ -1,9 +1,9 @@
 ﻿@model List<Product>
 
-<h1 class="text-center">Product List</h1>
+<h1 class="text-center" style="margin:100px">Product List</h1>
 
-<div>
-	<a asp-controller="Products" asp-action="Create">Create Product</a>
+<div style="margin:20px">
+	<a asp-controller="Products" asp-action="Create" class="btn btn-primary">Create Product</a>
 </div>
 
 <div class="container">
@@ -33,6 +33,12 @@
 					</td>
 					<td>
 						@Model[i].Rating
+					</td>
+					<td style="width:20px">
+						<a asp-controller="Products" asp-action="Edit" asp-route-id="@Model[i].ProductId" class="btn btn-primary">Edit</a>
+					</td>
+					<td style="width:20px">
+						<a asp-controller="Products" asp-action="Delete" asp-route-id="@Model[i].ProductId" class="btn btn-primary">Delete</a>
 					</td>
 				</tr>
 			}
