@@ -1,5 +1,6 @@
 ﻿using Groco.Data;
 using Groco.Models;
+using Groco.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Groco.Controllers
@@ -37,11 +38,11 @@ namespace Groco.Controllers
                     {
                         file.CopyTo(fileStream);
                     }
-                    category.ImageUrl = @"\Images\Category" + fileName;
+                    category.ImageUrl = @"\Images\Category\" + fileName;
                 }
                 _context.Categories.Add(category);
                 _context.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","Categories");
             }
             return View();
         }
@@ -62,28 +63,39 @@ namespace Groco.Controllers
         [HttpPost]
         public IActionResult Edit(Category category,IFormFile? file)
         {
-            if (ModelState.IsValid) { 
-                string wwwRootPath= _environment.WebRootPath;
-                Category categoryFromDb=_context.Categories.Find(category.Id);
-                if (string.IsNullOrEmpty(categoryFromDb.ImageUrl)==false)
+            
+            if (ModelState.IsValid) {
+                Category categoryFromDb = _context.Categories.Find(category.Id);
+                if (file != null)
                 {
-                    string oldImagePath= Path.Combine(wwwRootPath,categoryFromDb.ImageUrl);
-                    if (System.IO.File.Exists(oldImagePath))
+                    string wwwRootPath = _environment.WebRootPath;
+
+                    if (string.IsNullOrEmpty(categoryFromDb.ImageUrl) == false)
                     {
-                        System.IO.File.Delete(oldImagePath);
+                        string oldImagePath = Path.Combine(wwwRootPath, categoryFromDb.ImageUrl);
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+
                     }
-                }
-                if (file != null) {
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string categoryPath = Path.Combine(wwwRootPath, @"Images\Category");
-                    using (var fileStream = new FileStream(Path.Combine(categoryPath, fileName), FileMode.Create)) { 
+                    using (var fileStream = new FileStream(Path.Combine(categoryPath, fileName), FileMode.Create))
+                    {
                         file.CopyTo(fileStream);
                     }
-                    category.ImageUrl=@"\Images\Category\"+fileName;
+                    category.ImageUrl = @"\Images\Category\" + fileName;
                 }
+                else
+                {
+                    category.ImageUrl = categoryFromDb.ImageUrl;
+                }
+                _context.ChangeTracker.Clear();
                 _context.Categories.Update(category);
                 _context.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Categories");
+
             }
             return View(category);
         }
@@ -111,7 +123,7 @@ namespace Groco.Controllers
             }
             _context.Categories.Remove(categoryFromDb);
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Categories");
         }
     }
 }

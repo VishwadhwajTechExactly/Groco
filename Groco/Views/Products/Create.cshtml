@@ -20,12 +20,12 @@
 		<span asp-validation-for="Product.Rating"></span>
 	</div>
 	<div style="margin:20px">
-		<select asp-for="Product.Category" asp-items="@Model.CategoryList">
+		<select asp-for="Product.CategoryId" asp-items="@Model.CategoryList">
 			<option selected disabled>--select category--</option>
 		</select>
 	</div>
 	<div style="margin:20px">
-		<input type="file" name="file" asp-for="Product.ImageUrl" />
+		<input type="file" name="file"  />
 	</div>
 	<div style="margin:20px">
 		<button type="submit"  class="btn btn-primary">Create</button>

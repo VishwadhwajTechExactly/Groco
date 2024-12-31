@@ -4,6 +4,7 @@
 <h1 class="text-center" style="margin:100px">Edit Product</h1>
 
 <form method="post" enctype="multipart/form-data">
+	<input type="hidden" asp-for="Product.ProductId" />
 	<div style="margin:20px">
 		<label asp-for="Product.Name"></label>
 		<input type="text" asp-for="Product.Name" />
@@ -20,12 +21,12 @@
 		<span asp-validation-for="Product.Rating"></span>
 	</div>
 	<div style="margin:20px">
-		<select asp-for="Product.Category" asp-items="@Model.CategoryList">
+		<select asp-for="Product.CategoryId" asp-items="@Model.CategoryList">
 			<option selected disabled>--select category--</option>
 		</select>
 	</div>
 	<div style="margin:20px">
-		<img src="@Model.Product.ImageUrl" />
+		<img src="@Model.Product.ImageUrl" style="width:100px"/>
 	</div>
 	<div style="margin:20px">
 		<input type="file" name="file" asp-for="Product.ImageUrl" />
