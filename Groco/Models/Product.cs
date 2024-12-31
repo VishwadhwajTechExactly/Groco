@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Groco.Models
 {
@@ -10,5 +11,7 @@ namespace Groco.Models
         public float Price { get; set; }
         public int Rating {  get; set; }
         public string ImageUrl {  get; set; }
+
+        public Category? Category { get; set; }
     }
 }
