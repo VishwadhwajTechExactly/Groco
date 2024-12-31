@@ -10,9 +10,11 @@ namespace Groco.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public Products(ApplicationDbContext context)
+        private readonly IWebHostEnvironment _environment;
+        public Products(ApplicationDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
         public IActionResult Index()
         {
@@ -35,9 +37,102 @@ namespace Groco.Controllers
             return View(productViewModel);
         }
 
-        //[HttpPost]
-        //public IActionResult Create(Product product,)
-        //{
-        //}
+        [HttpPost]
+        public IActionResult Create(ProductViewModel productViewModel, IFormFile? file)
+        {
+            if (ModelState.IsValid) {
+                string wwwRootPath = _environment.WebRootPath;
+                if (file != null) { 
+                    string fileName=Guid.NewGuid().ToString()+Path.GetExtension(file.FileName);
+                    string productPath=Path.Combine(wwwRootPath, @"Images\Product");
+
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                    productViewModel.Product.ImageUrl = @"\Images\product\" + fileName;
+                }
+                _context.Products.Add(productViewModel.Product);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(productViewModel);
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var productFromDb = _context.Products.Find(id);
+            IEnumerable<SelectListItem> categoryList = _context.Categories
+                .Select(u => new SelectListItem {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                });
+            if (productFromDb == null)
+            {
+                return NotFound();
+            }
+            ProductViewModel productViewModel = new ProductViewModel
+            {
+                Product = productFromDb,
+                CategoryList = categoryList
+            };
+            return View(productViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(ProductViewModel productViewModel)
+        {
+            if (ModelState.IsValid) { 
+                _context.Products.Update(productViewModel.Product);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(productViewModel);
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var productFromDb = _context.Products.Find(id);
+            IEnumerable<SelectListItem> categoryList = _context.Categories
+                .Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                });
+            if (productFromDb == null)
+            {
+                return NotFound();
+            }
+            ProductViewModel productViewModel = new ProductViewModel
+            {
+                Product = productFromDb,
+                CategoryList = categoryList
+            };
+            return View(productViewModel);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePost(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            Product productFromDb= _context.Products.Find(id);
+            if (productFromDb == null) { 
+                return NotFound();
+            }
+            _context.Products.Remove(productFromDb);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
