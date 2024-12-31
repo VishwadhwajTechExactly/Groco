@@ -1,4 +1,5 @@
-﻿using Groco.Data;
+﻿using System.Security.Cryptography;
+using Groco.Data;
 using Groco.Models;
 using Groco.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -84,9 +85,28 @@ namespace Groco.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(ProductViewModel productViewModel)
+        public IActionResult Edit(ProductViewModel productViewModel,IFormFile? file)
         {
-            if (ModelState.IsValid) { 
+            if (ModelState.IsValid) {
+                Product productFromdb = _context.Products.Find(productViewModel.Product.ProductId);
+                string wwwRootPath = _environment.WebRootPath;
+                if (string.IsNullOrEmpty(productFromdb.ImageUrl) == false) {
+                    var oldImagePath = Path.Combine(wwwRootPath, productFromdb.ImageUrl.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productPath = Path.Combine(wwwRootPath, @"Images\Product");
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                }
+                productViewModel.Product.ImageUrl=@"\Images\Product\"+fileName;
                 _context.Products.Update(productViewModel.Product);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
