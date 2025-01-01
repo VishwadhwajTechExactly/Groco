@@ -565,7 +565,7 @@ progress {
 
 .initialism {
   font-size: 0.875em;
-  text-transform: uppercase;
+  
 }
 
 .blockquote {
@@ -7610,11 +7610,10 @@ textarea.form-control-lg {
 }
 
 .text-uppercase {
-  text-transform: uppercase !important;
+  
 }
 
 .text-capitalize {
-  text-transform: capitalize !important;
 }
 
 .text-wrap {
