@@ -1,47 +1,49 @@
 ﻿@model List<Product>
 
-<h1 class="text-center" style="margin:100px">Product List</h1>
+<h1 class="text-center">Product List</h1>
 
-<div style="margin:20px">
-	<a asp-controller="Products" asp-action="Create" class="btn btn-primary">Create Product</a>
-</div>
+<div class="wrapper">
+	<div class="mb-3">
+		<a asp-controller="Products" asp-action="Create" class="btn btn-primary">Create Product</a>
+	</div>
 
-<div class="container">
-	<table class="table table-bordered table-striped">
-		<thead>
-			<tr>
-				<th>
-					Name
-				</th>
-				<th>
-					Price
-				</th>
-				<th>
-					Rating
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			@for (int i = 0; i < Model.Count; i++)
-			{
+	<div class="container">
+		<table class="table table-bordered table-striped">
+			<thead>
 				<tr>
-					<td>
-						@Model[i].Name
-					</td>
-					<td>
-						@Model[i].Price
-					</td>
-					<td>
-						@Model[i].Rating
-					</td>
-					<td style="width:20px">
-						<a asp-controller="Products" asp-action="Edit" asp-route-id="@Model[i].ProductId" class="btn btn-primary">Edit</a>
-					</td>
-					<td style="width:20px">
-						<a asp-controller="Products" asp-action="Delete" asp-route-id="@Model[i].ProductId" class="btn btn-primary">Delete</a>
-					</td>
+					<th>
+						Name
+					</th>
+					<th>
+						Price
+					</th>
+					<th>
+						Rating
+					</th>
 				</tr>
-			}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				@for (int i = 0; i < Model.Count; i++)
+				{
+					<tr>
+						<td>
+							@Model[i].Name
+						</td>
+						<td>
+							@Model[i].Price
+						</td>
+						<td>
+							@Model[i].Rating
+						</td>
+						<td style="width:20px">
+							<a asp-controller="Products" asp-action="Edit" asp-route-id="@Model[i].ProductId" class="btn btn-primary">Edit</a>
+						</td>
+						<td style="width:20px">
+							<a asp-controller="Products" asp-action="Delete" asp-route-id="@Model[i].ProductId" class="btn btn-primary">Delete</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 </div>

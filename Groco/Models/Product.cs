@@ -11,7 +11,7 @@ namespace Groco.Models
         public int ProductId { get; set; }
         public string Name { get; set; }
         public float Price { get; set; }
-        public int Rating {  get; set; }
+        public float Rating {  get; set; }
 
         [ValidateNever]
         public int? CategoryId { get; set; }

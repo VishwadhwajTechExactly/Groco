@@ -1,7 +1,9 @@
 ﻿using System.Security.Cryptography;
 using Groco.Data;
 using Groco.Models;
+using Groco.Utility;
 using Groco.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -17,12 +19,13 @@ namespace Groco.Controllers
             _context = context;
             _environment = environment;
         }
+        [Authorize(Roles =SD.Role_Admin)]
         public IActionResult Index()
         {
             List<Product> products=_context.Products.ToList();
             return View(products);
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         public IActionResult Create()
         {
             IEnumerable<SelectListItem> categories = _context.Categories.Select(u => new SelectListItem
@@ -37,7 +40,7 @@ namespace Groco.Controllers
             };
             return View(productViewModel);
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         [HttpPost]
         public IActionResult Create(ProductViewModel productViewModel, IFormFile? file)
         {
@@ -59,7 +62,7 @@ namespace Groco.Controllers
             }
             return View(productViewModel);
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -83,7 +86,7 @@ namespace Groco.Controllers
             };
             return View(productViewModel);
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         [HttpPost]
         public IActionResult Edit(ProductViewModel productViewModel,IFormFile? file)
         {
@@ -122,7 +125,7 @@ namespace Groco.Controllers
             }
             return View(productViewModel);
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         public IActionResult Delete(int? id)
         {
             if (id == null)
@@ -147,7 +150,7 @@ namespace Groco.Controllers
             };
             return View(productViewModel);
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
@@ -162,6 +165,12 @@ namespace Groco.Controllers
             _context.Products.Remove(productFromDb);
             _context.SaveChanges();
             return RedirectToAction("Index", "Products");
+        }
+        [Authorize(Roles =SD.Role_Customer)]
+        public IActionResult CustomerIndex()
+        {
+            List<Product> products=_context.Products.ToList();
+            return View(products);
         }
     }
 }

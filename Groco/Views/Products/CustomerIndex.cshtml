@@ -1,0 +1,35 @@
+﻿@model List<Product>
+<head>
+    <link rel="stylesheet" href="~/css/style.css">
+</head>
+<div class="image-container">
+    @for(int i=0;i<Model.Count;i++){
+        <div class="image-item">
+            <img src="@Model[i].ImageUrl" />
+            <div class="mt-3">
+                @if (Model[i].Rating % 1 != 0)
+                {
+                    @for (int j = 0; j < Math.Floor(Model[i].Rating); j++)
+                    {
+                        <img src="\css\images\star.png" style="width:20px; height:20px;"/>
+                    }
+                    <img src="\css\images\half-star.png" style="width:15px; height:15px" />
+                }
+                else{
+                    @for (int j = 0; j < Math.Floor(Model[i].Rating); j++)
+                    {
+                        <img src="\css\images\star.png" style="width:20px; height:20px;" />
+                    }
+                }
+            </div>
+            <div class="button-container">
+                <button>add to cart</button>
+                <button>buy now</button>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="link-container">
+    <a asp-controller="Categories" asp-action="CustomerIndex">Categories</a>
+</div>

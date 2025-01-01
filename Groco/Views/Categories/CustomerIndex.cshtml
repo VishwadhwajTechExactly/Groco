@@ -1,0 +1,23 @@
+﻿@model List<Category>
+<head>
+    <link rel="stylesheet" href="~/css/style.css">
+</head>
+<div class="image-container">
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        <div class="image-item">
+            <img src="@Model[i].ImageUrl" />
+            <div class="mt-3">
+                @Model[i].Name
+            </div>
+            <div class="mt-3">
+               <p> Discount Up to @Model[i].Discount %</p>
+            </div>
+            <div class="mt-3 link-container">
+                <a asp-controller="Products" asp-action="CustomerIndex">Products</a>
+            </div>
+        </div>
+        
+    }
+</div>
+

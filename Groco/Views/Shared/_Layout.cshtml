@@ -17,7 +17,7 @@
     <header class="header">
         <a href="#" class="logo"><i class="fas fa-shopping-basket"></i>groco</a>
 
-        <nav class="navbar">
+        <nav class="navbar" style="height:10px">
             <a asp-controller="Home" asp-action="Index">home</a>
             <a asp-controller="Products" asp-action="Features">features</a>
             @if (User.IsInRole(SD.Role_Admin))

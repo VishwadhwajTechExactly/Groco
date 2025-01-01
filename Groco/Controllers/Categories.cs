@@ -1,7 +1,10 @@
 ﻿using Groco.Data;
 using Groco.Models;
+using Groco.Utility;
 using Groco.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Groco.Controllers
 {
@@ -16,17 +19,18 @@ namespace Groco.Controllers
             _context = context;
             _environment = environment;
         }
+        [Authorize(Roles = SD.Role_Admin)]
         public IActionResult Index()
         {
             List<Category> categories= _context.Categories.ToList();
             return View(categories);
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         public IActionResult Create()
         {
             return View();
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         [HttpPost]
         public IActionResult Create(Category category,IFormFile? file) {
             if (ModelState.IsValid) {
@@ -46,7 +50,7 @@ namespace Groco.Controllers
             }
             return View();
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         public IActionResult Edit(int? id) {
             if (id == null)
             {
@@ -59,7 +63,7 @@ namespace Groco.Controllers
             }
             return View(categoryFromDb);
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         [HttpPost]
         public IActionResult Edit(Category category,IFormFile? file)
         {
@@ -99,7 +103,7 @@ namespace Groco.Controllers
             }
             return View(category);
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         public IActionResult Delete(int? id) { 
             if(id == null)
             {
@@ -111,7 +115,7 @@ namespace Groco.Controllers
             }
             return View(categoryFromDb);
         }
-
+        [Authorize(Roles = SD.Role_Admin)]
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id) {
             if (id == null) {
@@ -124,6 +128,12 @@ namespace Groco.Controllers
             _context.Categories.Remove(categoryFromDb);
             _context.SaveChanges();
             return RedirectToAction("Index", "Categories");
+        }
+
+        [Authorize(Roles = SD.Role_Customer)]
+        public IActionResult CustomerIndex() {
+            List<Category> categoryList=_context.Categories.Include(u=>u.Products).ToList();
+            return View(categoryList);
         }
     }
 }
