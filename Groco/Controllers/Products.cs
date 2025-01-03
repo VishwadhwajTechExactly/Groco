@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using System.Net;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using Groco.Data;
 using Groco.Models;
 using Groco.Utility;
@@ -6,6 +8,7 @@ using Groco.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Groco.Controllers
 {
@@ -14,8 +17,6 @@ namespace Groco.Controllers
         private readonly ApplicationDbContext _context;
 
         private readonly IWebHostEnvironment _environment;
-
-        private List<Product> products = new List<Product>();
         public Products(ApplicationDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
@@ -173,64 +174,61 @@ namespace Groco.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index", "Products");
         }
-        [Authorize(Roles = SD.Role_Customer)]
+        [Authorize]
         public IActionResult CustomerIndex()
         {
             List<Product> products = _context.Products.ToList();
             return View(products);
         }
 
-        [Authorize(Roles = SD.Role_Customer)]
-        public void AddToCart(int? id)
+        [Authorize]
+        public IActionResult Details(int? id)
         {
-            Product productFromDb = _context.Products.Find(id);
-            if (productFromDb == null)
-            {
-                return;
+            if (id == null) {
+                return NotFound();
             }
-            products.Add(productFromDb);
+            Product productFromDb = _context.Products.Find(id);
+            ShoppingCart shoppingCart = new ShoppingCart
+            {
+                Product = productFromDb,
+                ProductId = productFromDb.ProductId
+            };
+            return View(shoppingCart);
         }
-
-        [Authorize(Roles = SD.Role_Customer)]
+        [HttpPost]
+        [Authorize]
+        public IActionResult AddToCart(ShoppingCart shoppingCart)
+        {
+            if (shoppingCart == null) {
+                return BadRequest();
+            }
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.UserId = userId;
+            ShoppingCart cartFromDb = _context.ShoppingCarts
+                .FirstOrDefault(u=>u.ProductId==shoppingCart.ProductId && u.UserId==userId);
+            if (cartFromDb == null && shoppingCart.Count>0)
+            {
+                _context.ShoppingCarts.Add(shoppingCart);
+            }
+            else if(cartFromDb!=null && shoppingCart.Count>0){
+                cartFromDb.Count += shoppingCart.Count;
+                _context.ShoppingCarts.Update(cartFromDb);
+            }
+            var redirectUrl = Url.Action("CustomerIndex", "Products");
+            return Json(new { redirectUrl });
+        }
+        [Authorize]
         public IActionResult ShowCart()
         {
-            Dictionary<Product,int> productDictionary = new Dictionary<Product,int>();
-            for (int i = 0; i < products.Count; i++)
-            {
-                if (productDictionary.ContainsKey(products[i]))
-                {
-                    productDictionary[products[i]]++;
-                }
-                else
-                {
-                    productDictionary.Add(products[i], 1);
-                }
-            }
-            return View(productDictionary);
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            List<ShoppingCart> shoppingCart = _context.ShoppingCarts.Include(u => u.Product)
+                .Where(u => u.UserId == userId).ToList();
+            return View(shoppingCart);
         }
-        [Authorize(Roles = SD.Role_Customer)]
-        public IActionResult AddProduct(Product product)
-        {
-            products.Add(product);
-            return RedirectToAction("ShowCart", "Products");
-        }
-        [Authorize(Roles = SD.Role_Customer)]
-        public IActionResult SubtractProduct(Product product)
-        {
-            products.Remove(product);
-            return RedirectToAction("ShowCart", "Products");
 
-        }
-        [Authorize(Roles = SD.Role_Customer)]
-        public IActionResult RemoveProduct(Product product) {
-            for (int i = products.Count; i >= 0; i--) { 
-                if (products[i].ProductId == product.ProductId)
-                {
-                    products.RemoveAt(i);
-                }
-            }
-            return RedirectToAction("ShowCart", "Products");
-        }
+
     }
     
 }

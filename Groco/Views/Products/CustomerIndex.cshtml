@@ -1,6 +1,7 @@
 ﻿@model List<Product>
 <head>
 	<link rel="stylesheet" href="~/css/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <div class="image-container">
 	@for (int i = 0; i < Model.Count; i++)
@@ -8,7 +9,7 @@
 		<div class="image-item">
 			<img src="@Model[i].ImageUrl" />
 			<div class="mt-3">
-				@Model[i].Price $
+				@Model[i].Price.ToString("c")
 			</div>
 			<div class="mt-3">
 				@if (Model[i].Rating % 1 != 0)
@@ -43,11 +44,11 @@
 	$(document).ready(function(){
 		$(".add-to-cart").click(function(){
 			$.ajax({
-				url : "@Url.Action("AddToCart", "Products")",
+				url : "@Url.Action("Details", "Products")",
 				type : "GET",
 				data : { id : $(this).attr("product-id") },
-				success : function(response){
-					console.log(response);
+				success : function(data){
+					$("body").html(data);
 				},
 				error : function(error){
 					console.log(error);
@@ -56,3 +57,4 @@
 		});
 	});
 </script>
+

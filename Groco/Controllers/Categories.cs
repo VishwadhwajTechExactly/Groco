@@ -130,7 +130,7 @@ namespace Groco.Controllers
             return RedirectToAction("Index", "Categories");
         }
 
-        [Authorize(Roles = SD.Role_Customer)]
+        [Authorize]
         public IActionResult CustomerIndex() {
             List<Category> categoryList=_context.Categories.Include(u=>u.Products).ToList();
             return View(categoryList);

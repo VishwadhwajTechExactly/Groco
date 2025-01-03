@@ -1,11 +1,11 @@
-﻿@model Dictionary<Product,int>
+﻿@model List<ShoppingCart>
 
 <div class="container">
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
 				<th>
-					Product
+					Name
 				</th>
 				<th>
 					Quantity
@@ -16,73 +16,25 @@
 			</tr>
 		</thead>
 		<tbody>
-			@for (int i = 0; i < Model.Count; i++)
-			{
+			@for(int i=0;i<Model.Count;i++){
 				<tr>
 					<td>
-						@Model.Keys.ElementAt(i)
+						@Model[i].Product.Name
 					</td>
 					<td>
-						@Model[Model.Keys.ElementAt(i)]
+						@Model[i].Count
 					</td>
 					<td>
-						<button class="btn" onclick="addProduct(@Model.Keys.ElementAt(i))">+</button>
-						<button class="btn" onclick="subtractProduct(@Model.Keys.ElementAt(i))">-</button>
+						@((@Model[i].Product.Price*@Model[i].Count).ToString("c"))
 					</td>
 					<td>
-						@Model.Keys.ElementAt(i).Price*@Model[Model.Keys.ElementAt(i)]
+						<button class="btn btn-primary">Check Out</button>
 					</td>
 					<td>
-						<button on-click="removeProduct(@Model.Keys.ElementAt(i))">Remove From Cart</button>
-					</td>
-					<td>
-						<button id="checkout">Checkout</button>
+						<button class="btn btn-primary">Remove From Cart</button>
 					</td>
 				</tr>
 			}
 		</tbody>
 	</table>
 </div>
-<script type="text/javascript">
-	$(document).ready(function(){
-		function addProduct(product){
-			$.ajax({
-				url : @Url.Action("AddProduct","Products"),
-				type : "GET",
-				data : { product : product },
-				success : function(response){
-					console.log(response);
-				},
-				error : function(error){
-					console.log(error);
-				}
-			})
-		}
-		function subtractProduct(product){
-			$.ajax({
-				url : @Url.Action("SubtractProduct","Products"),
-				type : "GET",
-				data : { product : product },
-				success : function(response){
-					console.log(response);
-				},
-				error : function(error){
-					console.log(error);
-				}
-			})
-		}
-		function removeProduct(product){
-			$.ajax({
-				url : @Url.Action("RemoveProduct", "Products"),
-				type : "GET",
-				data : { product : product },
-				success : function(response){
-					console.log(response);
-				},
-				error : function(error){
-					console.log(error);
-				}
-			})
-		}
-	})	
-</script>

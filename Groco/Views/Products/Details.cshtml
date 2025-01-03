@@ -1,0 +1,41 @@
+﻿@model ShoppingCart
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<div class="container">
+	<form id="add-to-cart">
+		<input hidden asp-for="ProductId" />
+		<div class="mb-3">
+			<img src="@Model.Product.ImageUrl" style="width:100px" />
+		</div>
+		<div class="mb-3">
+			@Model.Product.Name
+		</div>
+		<div class="mb-3">
+			<label asp-for="@Model.Count"></label>
+			<input type="text" class="form-control" asp-for="@Model.Count" />
+		</div>
+		<div class="mb-3">
+			<button type="submit" class="btn btn-primary">Add To Cart</button>
+		</div>
+	</form>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#add-to-cart").on("submit",function(e){
+			e.preventDefault();
+			var formData = $(this).serialize();
+			$.ajax({
+				url : "@Url.Action("AddToCart", "Products")",
+				type : "POST",
+				data : formData,
+				success : function(data){
+					window.location.href = data.redirectUrl;
+				},
+				error : function(error){
+					console.log(error);
+				}
+			});
+		});
+	});
+</script>

@@ -15,7 +15,7 @@
 </head>
 <body>
     <header class="header">
-        <a id="show-cart" class="logo"><i class="fas fa-shopping-basket"></i>groco</a>
+        <a href="/Home/Index" class="logo"><i class="fas fa-shopping-basket"></i>groco</a>
 
         <nav class="navbar" style="height:10px">
             <a asp-controller="Home" asp-action="Index">home</a>
@@ -89,15 +89,15 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/jquery-3.7.1.min.js" asp-append-version="true"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-            $("#show-cart").click(function(){
+            $("#cart-btn").click(function(){
                 $.ajax({
                     url : "@Url.Action("ShowCart","Products")",
                     type : "GET",
-                    success : function(response){
-                        console.log(response);
+                    success : function(data){
+                        $("body").html(data);
                     },
                     error : function(error){
                         console.log(error);

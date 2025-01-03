@@ -14,6 +14,8 @@ namespace Groco.Data
 
         public DbSet<Category> Categories {  get; set; }  
 
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
